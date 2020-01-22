@@ -7,7 +7,7 @@ import { ApiService } from 'src/app/core/api/api.service';
 @Injectable({
   providedIn: 'root'
 })
-export class TasksHttpService {
+export class TasksService {
 
   private taskSubject: BehaviorSubject<Task[]>;
   private editModeSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -30,6 +30,10 @@ export class TasksHttpService {
     return this.taskSubject;
   }
 
+  public getTasks(): Observable<Task[]> {
+    return this.apiService.get('/api/tasks');
+  }
+
   public getTaskById(taskId: number): Observable<Task> {
     return this.apiService.get(`/api/tasks/${taskId}`);
   }
@@ -38,11 +42,11 @@ export class TasksHttpService {
     return this.apiService.post('/api/tasks', task);
   }
 
-  public updateTask(task: Task): Observable<Task> {
+  public updateTask(task: Partial<Task>): Observable<Partial<Task>> {
     return this.apiService.put(`/api/tasks/${task.id}`, task);
   }
 
-  public deleteTask(task: Task): Observable<Task> {
-    return this.apiService.delete(`/api/tasks/${task.id}`);
+  public deleteTask(taskId: number): Observable<Task> {
+    return this.apiService.delete(`/api/tasks/${taskId}`);
   }
 }

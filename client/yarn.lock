@@ -889,6 +889,21 @@
   resolved "https://registry.yarnpkg.com/@istanbuljs/schema/-/schema-0.1.2.tgz#26520bf09abe4a5644cd5414e37125a8954241dd"
   integrity sha512-tsAQNx32a8CoFhjhijUIhI4kccIAgmGhy8LZMZgGfmXcpMbPRUqn5LWmgRttILi6yeGmBJd2xsPkFMs0PzgPCw==
 
+"@ngrx/effects@^8.6.0":
+  version "8.6.0"
+  resolved "https://registry.yarnpkg.com/@ngrx/effects/-/effects-8.6.0.tgz#a0d7339597a5128c5cf896ddcf93f73406a45860"
+  integrity sha512-JdyJLQbv/wnE0ZPY9DcDOtF9PzJuzsKWmIWgIGunHF18wdjk5O8Zpkcrxq18wDRL6geg5UTtNJRMvTQhpDbzow==
+
+"@ngrx/entity@^8.6.0":
+  version "8.6.0"
+  resolved "https://registry.yarnpkg.com/@ngrx/entity/-/entity-8.6.0.tgz#63e7875d0e83e552249b8b75bb9b6aba248cae2a"
+  integrity sha512-Qq+ANgsHd2/i7gam1j05hxA8kPWQyf5ewtCLlbtMJI/qLmvA6ruSE8PYNNwrt90wm4BWdks2zKE5ERzvPzto0w==
+
+"@ngrx/store@^8.6.0":
+  version "8.6.0"
+  resolved "https://registry.yarnpkg.com/@ngrx/store/-/store-8.6.0.tgz#8540c5bd40b33fc2f443e7e86f47c0d801b8f413"
+  integrity sha512-K4cvCEa+5hw9qrETQWO+Cha3YbVCAT8yaIKJr/N35KntTL9mQMjoL+51JWLZfBwPV0e19CFgJIyrBnVUTxwr2A==
+
 "@ngtools/webpack@9.0.0-rc.10":
   version "9.0.0-rc.10"
   resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-9.0.0-rc.10.tgz#8f03a350be995a5035f78ceb52067feacce2349c"

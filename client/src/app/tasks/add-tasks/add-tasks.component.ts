@@ -3,7 +3,10 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 
 import { Task } from 'src/app/tasks/shared/models/task.model';
-import { TasksHttpService } from 'src/app/tasks/shared/services/tasks-http.service';
+import { TasksService } from 'src/app/tasks/shared/services/tasks-http.service';
+import { Store } from '@ngrx/store';
+import { TasksState } from '../states/tasks.state';
+import { addTask, updateTask, loadTasksRequest, updateTaskRequest, addTaskRequest } from '../actions';
 
 @Component({
   selector: 'app-add-tasks',
@@ -19,12 +22,13 @@ export class AddTasksComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private tasksHttpService: TasksHttpService
+    private tasksService: TasksService,
+    private store: Store<TasksState>
   ) { }
 
   ngOnInit() {
     this.buildTaskForm();
-    this.tasksHttpService.isEditMode.subscribe((value: boolean) => {
+    this.tasksService.isEditMode.subscribe((value: boolean) => {
       this.isEditMode = value;
     });
   }
@@ -49,28 +53,38 @@ export class AddTasksComponent implements OnInit {
 
   private addTask(): void {
     this.taskForm.value.dueDate = this.datePipe.transform(this.taskForm.value.dueDate, 'yyyy-MM-dd');
-    const newTask: Task = this.taskForm.value;
+    const task: Task = this.taskForm.value;
 
-    this.tasksHttpService.createTask(newTask).subscribe((task: Task) => {
-      if (task) {
-        this.updateTaskList();
-      }
-    });
+    const action = addTaskRequest({ task });
+    this.store.dispatch(action);
+
+    // if (!this.store.error) {
+    //   this.updateTaskList();
+    // }
+    // this.tasksService.createTask(task).subscribe((newTask: Task) => {
+    //   if (newTask) {
+    //     this.updateTaskList();
+    //   }
+    // });
   }
 
   private updateTask(): void {
     this.taskForm.value.dueDate = this.datePipe.transform(this.taskForm.value.dueDate, 'yyyy-MM-dd');
-    this.tasksHttpService.updateTask(this.taskForm.value).subscribe((updatedTask: Task) => {
-      if (updatedTask) {
-        this.updateTaskList();
-      }
-    });
+    const updatedTask = this.taskForm.value;
+    const action = updateTaskRequest({ updatedTask });
+    this.store.dispatch(action);
     this.isEditMode = false;
   }
 
   private updateTaskList(): void {
-    this.tasksHttpService.retrieveAllTasks();
+    // this.tasksService.retrieveAllTasks();
+    // this.dispatchLoadTasks();
     this.taskForm.reset({ dueDate: [this.getActualDate()] });
+  }
+
+  private dispatchLoadTasks() {
+    const action = loadTasksRequest();
+    this.store.dispatch(action);
   }
 
   private buildTaskForm(): void {

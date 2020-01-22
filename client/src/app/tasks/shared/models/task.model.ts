@@ -3,4 +3,6 @@ export interface Task {
   title: string;
   done: boolean;
   dueDate: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

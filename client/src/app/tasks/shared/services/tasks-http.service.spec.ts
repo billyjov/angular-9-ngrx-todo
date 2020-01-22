@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-import { TasksHttpService } from './tasks-http.service';
+import { TasksService } from './tasks-http.service';
 
 describe('TasksHttpService', () => {
   beforeEach(() => TestBed.configureTestingModule({
@@ -11,7 +11,7 @@ describe('TasksHttpService', () => {
   }));
 
   it('should be created', () => {
-    const service: TasksHttpService = TestBed.get(TasksHttpService);
+    const service: TasksService = TestBed.inject(TasksService);
     expect(service).toBeTruthy();
   });
 });

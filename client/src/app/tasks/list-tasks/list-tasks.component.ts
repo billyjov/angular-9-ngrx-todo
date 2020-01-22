@@ -2,9 +2,18 @@ import { Component, OnInit, Input } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormGroup } from '@angular/forms';
 
+import { Store, select } from '@ngrx/store';
+import { Observable } from 'rxjs';
+
 import { Task } from 'src/app/tasks/shared/models/task.model';
-import { TasksHttpService } from 'src/app/tasks/shared/services/tasks-http.service';
+import { TasksService } from 'src/app/tasks/shared/services/tasks-http.service';
 import { TaskObserverService } from 'src/app/core/task-observer/task-observer.service';
+import { TasksState } from '../states/tasks.state';
+import { TasksModuleState } from '../states';
+import { getTasks } from '../selectors';
+import { loadTasksRequest, deleteTaskRequest, updateTaskRequest } from '../actions';
+import { tap, take } from 'rxjs/operators';
+import { Update } from '@ngrx/entity';
 
 @Component({
   selector: 'app-list-tasks',
@@ -13,19 +22,18 @@ import { TaskObserverService } from 'src/app/core/task-observer/task-observer.se
 })
 export class ListTasksComponent implements OnInit {
 
-  public tasks: Task[];
+  public tasks$: Observable<Task[]>;
 
   @Input()
   public taskForm: FormGroup;
 
   constructor(
-    private tasksHttpService: TasksHttpService,
-    private taskObserverService: TaskObserverService
+    private tasksHttpService: TasksService,
+    private store: Store<TasksModuleState>
   ) { }
 
   ngOnInit() {
-    this.tasksHttpService.retrieveAllTasks();
-    this.initTaskLists();
+    this.initTasksState();
   }
 
   public editTask(task: Task): void {
@@ -40,30 +48,24 @@ export class ListTasksComponent implements OnInit {
   }
 
   public removeTask(task: Task): void {
-    this.tasksHttpService.deleteTask(task).subscribe((response: Task) => {
-      if (response) {
-        this.tasksHttpService.retrieveAllTasks();
-      }
-    });
+    const action = deleteTaskRequest({ taskId: task.id });
+    this.store.dispatch(action);
   }
 
   public markAsDone(isChecked, task: Task): void {
     task.done = isChecked.target.checked;
-    this.tasksHttpService.updateTask(task).subscribe((response: Task) => {
-      if (response) {
-        this.tasksHttpService.retrieveAllTasks();
+    const updatedTask = task as unknown as Update<Task>;
+    const action = updateTaskRequest({ updatedTask });
+
+    this.store.dispatch(action);
+  }
+
+  private initTasksState() {
+    this.tasks$ = this.store.pipe(select(getTasks), tap(tasks => {
+      if (tasks.length === 0) {
+        const action = loadTasksRequest();
+        this.store.dispatch(action);
       }
-    });
-  }
-
-  public isEmptyTasks(): boolean {
-    return this.tasks.length === 0;
-  }
-
-  private initTaskLists(): void {
-    this.tasksHttpService.getAllTasks().subscribe((allTasks: Task[]) => {
-      this.tasks = allTasks;
-      this.taskObserverService.emitAllTasks(allTasks);
-    });
+    }));
   }
 }

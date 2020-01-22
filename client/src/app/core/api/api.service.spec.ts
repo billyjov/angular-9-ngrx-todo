@@ -19,8 +19,8 @@ describe('ApiService', () => {
         HttpClientTestingModule
       ]
     });
-    apiService = TestBed.get(ApiService);
-    httpMock = TestBed.get(HttpTestingController);
+    apiService = TestBed.inject(ApiService);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   it('should be injected', () => {
