@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormGroup } from '@angular/forms';
 
+import { Update } from '@ngrx/entity';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
@@ -50,8 +51,14 @@ export class ListTasksComponent implements OnInit {
   }
 
   public markAsDone(isChecked, task: Task): void {
-    task.done = isChecked.target.checked;
-    const updatedTask = task;
+    console.log('task: ', task);
+    const updatedTask: Update<Task> = {
+      id: task.id,
+      changes: {
+        id: task.id,
+        done: isChecked.target.checked
+      }
+    };
     const action = updateTaskRequest({ updatedTask });
 
     this.store.dispatch(action);

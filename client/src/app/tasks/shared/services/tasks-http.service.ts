@@ -45,7 +45,7 @@ export class TasksService {
     );
   }
 
-  public updateTask(task: Task): Observable<Task> {
+  public updateTask(task: Partial<Task>): Observable<Partial<Task>> {
     return this.apiService.put(`/api/tasks/${task.id}`, task);
   }
 

@@ -36,7 +36,7 @@ export const addTaskFail = createAction(
 // UPDATE ACTIONS
 export const updateTaskRequest = createAction(
   '[TaskModule] UpdateTasksRequest',
-  props<{ updatedTask: Task }>()
+  props<{ updatedTask: Update<Task> }>()
 );
 
 export const updateTasksSuccess = createAction(

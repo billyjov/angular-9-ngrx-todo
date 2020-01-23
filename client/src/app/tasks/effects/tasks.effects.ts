@@ -61,7 +61,7 @@ export class TasksEffects implements OnInitEffects {
     ofType(updateTaskRequest),
     switchMap((action) => {
       const updatedTask = action.updatedTask;
-      return this.tasksService.updateTask(updatedTask).pipe(
+      return this.tasksService.updateTask(updatedTask.changes).pipe(
         mergeMap(() => [
           updateTask({ updatedTask }),
           updateTasksSuccess()

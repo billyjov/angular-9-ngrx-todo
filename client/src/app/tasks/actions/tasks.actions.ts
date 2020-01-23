@@ -9,7 +9,7 @@ export const addTask = createAction(
 
 export const updateTask = createAction(
   '[TaskModule] UpdateTask',
-  props<{ updatedTask: Task }>()
+  props<{ updatedTask: Update<Task> }>()
 );
 
 export const deleteTask = createAction(

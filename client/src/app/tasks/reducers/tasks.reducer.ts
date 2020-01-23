@@ -18,13 +18,7 @@ export const tasksReducer = createReducer(
     return tasksAdapter.addOne(task, state);
   }),
   on(TasksActions.updateTask, (state, { updatedTask }) => {
-    const task: Update<Task> = {
-      id: updatedTask.id,
-      changes: {
-        ...updatedTask
-      }
-    };
-    return tasksAdapter.updateOne(task, state);
+    return tasksAdapter.updateOne(updatedTask, state);
   }),
   on(TasksActions.deleteTask, (state, { taskId }) => {
     return tasksAdapter.removeOne(taskId, state);

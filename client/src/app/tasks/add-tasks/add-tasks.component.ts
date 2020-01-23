@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 
 import { Store } from '@ngrx/store';
+import { Update } from '@ngrx/entity';
 
 import { Task } from 'src/app/tasks/shared/models/task.model';
 import { TasksService } from 'src/app/tasks/shared/services/tasks-http.service';
@@ -63,7 +64,13 @@ export class AddTasksComponent implements OnInit {
 
   private updateTask(): void {
     this.taskForm.value.dueDate = this.datePipe.transform(this.taskForm.value.dueDate, 'yyyy-MM-dd');
-    const updatedTask = this.taskForm.value;
+    const task = this.taskForm.value;
+    const updatedTask: Update<Task> = {
+      id: task.id,
+      changes: {
+        ...task
+      }
+    };
     const action = updateTaskRequest({ updatedTask });
     this.store.dispatch(action);
     this.isEditMode = false;

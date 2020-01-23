@@ -43,14 +43,8 @@ router.post('/tasks', async (req: Request, res: Response) => {
 router.put('/tasks/:id', (req: Request, res: Response) => {
     try {
         const taskRepository = getManager().getRepository(Task);
-        const task: Task = new Task();
-        task.title = req.body.title;
-        task.done = req.body.done;
-        task.dueDate = req.body.dueDate;
-        taskRepository.update(
-            req.params.id,
-            task,
-        ).then((updatedTask: UpdateResult) => {
+
+        taskRepository.update(req.params.id, { ...req.body }).then((updatedTask: UpdateResult) => {
             res.status(200).send({
                 message: `Task successfully updated`,
                 response: updatedTask,
