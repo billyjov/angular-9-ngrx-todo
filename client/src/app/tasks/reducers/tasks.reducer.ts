@@ -1,6 +1,8 @@
 import { createReducer, on } from '@ngrx/store';
 import * as TasksActions from '../actions/index';
 import { tasksAdapter, TasksState } from '../states/tasks.state';
+import { Update } from '@ngrx/entity';
+import { Task } from '../shared/models/task.model';
 
 
 export const initialState: TasksState = tasksAdapter.getInitialState({
@@ -13,16 +15,16 @@ export const tasksReducer = createReducer(
     return tasksAdapter.addAll(tasks, state);
   }),
   on(TasksActions.addTask, (state, { task }) => {
-    console.log('inside reducer: ');
-    console.log('state: ', state);
-    console.log('task: ', task);
-    // task.response due to node structure inside server.
-    return tasksAdapter.addOne(task.response, state);
+    return tasksAdapter.addOne(task, state);
   }),
   on(TasksActions.updateTask, (state, { updatedTask }) => {
-    console.log('updated Task', updatedTask);
-    console.log('updated state', state);
-    return tasksAdapter.updateOne(updatedTask, state);
+    const task: Update<Task> = {
+      id: updatedTask.id,
+      changes: {
+        ...updatedTask
+      }
+    };
+    return tasksAdapter.updateOne(task, state);
   }),
   on(TasksActions.deleteTask, (state, { taskId }) => {
     return tasksAdapter.removeOne(taskId, state);

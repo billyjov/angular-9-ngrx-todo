@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 
-import { createEffect, Actions, ofType } from '@ngrx/effects';
-import { tap, mergeMap, catchError, switchMap } from 'rxjs/operators';
+import { createEffect, Actions, ofType, OnInitEffects } from '@ngrx/effects';
+import { Action } from '@ngrx/store';
+import { mergeMap, catchError, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 import { TasksService } from '../shared/services/tasks-http.service';
@@ -27,12 +28,7 @@ import { Task } from '../shared/models/task.model';
 
 
 @Injectable()
-export class TasksEffects {
-
-  constructor(
-    private action$: Actions,
-    private tasksService: TasksService
-  ) { }
+export class TasksEffects implements OnInitEffects {
 
 
   public loadTasksRequest$ = createEffect(() => this.action$.pipe(
@@ -65,8 +61,7 @@ export class TasksEffects {
     ofType(updateTaskRequest),
     switchMap((action) => {
       const updatedTask = action.updatedTask;
-
-      return this.tasksService.updateTask(updatedTask as Partial<Task>).pipe(
+      return this.tasksService.updateTask(updatedTask).pipe(
         mergeMap(() => [
           updateTask({ updatedTask }),
           updateTasksSuccess()
@@ -91,4 +86,13 @@ export class TasksEffects {
       );
     })
   ));
+
+  constructor(
+    private action$: Actions,
+    private tasksService: TasksService
+  ) { }
+
+  ngrxOnInitEffects(): Action {
+    return { type: '[TaskModule] LoadTasksRequest' };
+  }
 }

@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 
+import { Store } from '@ngrx/store';
+
 import { Task } from 'src/app/tasks/shared/models/task.model';
 import { TasksService } from 'src/app/tasks/shared/services/tasks-http.service';
-import { Store } from '@ngrx/store';
 import { TasksState } from '../states/tasks.state';
-import { addTask, updateTask, loadTasksRequest, updateTaskRequest, addTaskRequest } from '../actions';
+import { updateTaskRequest, addTaskRequest } from '../actions';
 
 @Component({
   selector: 'app-add-tasks',
@@ -57,15 +58,7 @@ export class AddTasksComponent implements OnInit {
 
     const action = addTaskRequest({ task });
     this.store.dispatch(action);
-
-    // if (!this.store.error) {
-    //   this.updateTaskList();
-    // }
-    // this.tasksService.createTask(task).subscribe((newTask: Task) => {
-    //   if (newTask) {
-    //     this.updateTaskList();
-    //   }
-    // });
+    this.resetForm();
   }
 
   private updateTask(): void {
@@ -74,17 +67,11 @@ export class AddTasksComponent implements OnInit {
     const action = updateTaskRequest({ updatedTask });
     this.store.dispatch(action);
     this.isEditMode = false;
+    this.resetForm();
   }
 
-  private updateTaskList(): void {
-    // this.tasksService.retrieveAllTasks();
-    // this.dispatchLoadTasks();
+  private resetForm(): void {
     this.taskForm.reset({ dueDate: [this.getActualDate()] });
-  }
-
-  private dispatchLoadTasks() {
-    const action = loadTasksRequest();
-    this.store.dispatch(action);
   }
 
   private buildTaskForm(): void {

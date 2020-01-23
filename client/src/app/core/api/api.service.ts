@@ -48,6 +48,18 @@ export class ApiService {
   }
 
   /**
+   * PATCH request.
+   *
+   * @param string url The specific endpoint url.
+   * @param T body The object that should be updated.
+   * @param string [apiBaseUrl] An optional base url as soon as it's different to the default.
+   * @returns Observable<T>
+   */
+  public patch<T>(url: string, body: T, apiBaseUrl?: string): Observable<T> {
+    return this.http.patch<T>(apiBaseUrl ? `${apiBaseUrl}${url}` : `${environment.apiBaseUrl}${url}`, body);
+  }
+
+  /**
    * DELETE request.
    *
    * @param string url The specific endpoint url.

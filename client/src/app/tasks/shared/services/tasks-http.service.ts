@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 import { Task } from 'src/app/tasks/shared/models/task.model';
 import { ApiService } from 'src/app/core/api/api.service';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -39,10 +40,12 @@ export class TasksService {
   }
 
   public createTask(task: Task): Observable<Task> {
-    return this.apiService.post('/api/tasks', task);
+    return this.apiService.post('/api/tasks', task).pipe(
+      map((res: any) => res.response)
+    );
   }
 
-  public updateTask(task: Partial<Task>): Observable<Partial<Task>> {
+  public updateTask(task: Task): Observable<Task> {
     return this.apiService.put(`/api/tasks/${task.id}`, task);
   }
 

@@ -7,13 +7,9 @@ import { Observable } from 'rxjs';
 
 import { Task } from 'src/app/tasks/shared/models/task.model';
 import { TasksService } from 'src/app/tasks/shared/services/tasks-http.service';
-import { TaskObserverService } from 'src/app/core/task-observer/task-observer.service';
-import { TasksState } from '../states/tasks.state';
 import { TasksModuleState } from '../states';
 import { getTasks } from '../selectors';
-import { loadTasksRequest, deleteTaskRequest, updateTaskRequest } from '../actions';
-import { tap, take } from 'rxjs/operators';
-import { Update } from '@ngrx/entity';
+import { deleteTaskRequest, updateTaskRequest } from '../actions';
 
 @Component({
   selector: 'app-list-tasks',
@@ -30,7 +26,8 @@ export class ListTasksComponent implements OnInit {
   constructor(
     private tasksHttpService: TasksService,
     private store: Store<TasksModuleState>
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     this.initTasksState();
@@ -54,18 +51,13 @@ export class ListTasksComponent implements OnInit {
 
   public markAsDone(isChecked, task: Task): void {
     task.done = isChecked.target.checked;
-    const updatedTask = task as unknown as Update<Task>;
+    const updatedTask = task;
     const action = updateTaskRequest({ updatedTask });
 
     this.store.dispatch(action);
   }
 
   private initTasksState() {
-    this.tasks$ = this.store.pipe(select(getTasks), tap(tasks => {
-      if (tasks.length === 0) {
-        const action = loadTasksRequest();
-        this.store.dispatch(action);
-      }
-    }));
+    this.tasks$ = this.store.pipe(select(getTasks));
   }
 }

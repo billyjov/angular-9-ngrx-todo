@@ -4,13 +4,12 @@ import { Task } from '../shared/models/task.model';
 
 export const addTask = createAction(
   '[TaskModule] AddTask',
-  // correct should be task: Task but haved to make this corresponding on backend response
-  props<{ task: any }>()
+  props<{ task: Task }>()
 );
 
 export const updateTask = createAction(
   '[TaskModule] UpdateTask',
-  props<{ updatedTask: Update<Task> }>()
+  props<{ updatedTask: Task }>()
 );
 
 export const deleteTask = createAction(
