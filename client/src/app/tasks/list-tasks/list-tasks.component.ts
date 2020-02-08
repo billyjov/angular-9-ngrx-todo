@@ -11,6 +11,7 @@ import { TasksService } from 'src/app/tasks/shared/services/tasks-http.service';
 import { TasksModuleState } from '../states';
 import { getTasks } from '../selectors';
 import { deleteTaskRequest, updateTaskRequest } from '../actions';
+import { TaskSocketService } from '../shared/services/task-socket/task-socket.service';
 
 @Component({
   selector: 'app-list-tasks',
@@ -26,7 +27,8 @@ export class ListTasksComponent implements OnInit {
 
   constructor(
     private tasksHttpService: TasksService,
-    private store: Store<TasksModuleState>
+    private store: Store<TasksModuleState>,
+    private taskSocketService: TaskSocketService
   ) {
   }
 
@@ -48,10 +50,10 @@ export class ListTasksComponent implements OnInit {
   public removeTask(task: Task): void {
     const action = deleteTaskRequest({ taskId: task.id });
     this.store.dispatch(action);
+    this.taskSocketService.dispatch('taskDeleted', task);
   }
 
   public markAsDone(isChecked, task: Task): void {
-    console.log('task: ', task);
     const updatedTask: Update<Task> = {
       id: task.id,
       changes: {
@@ -62,6 +64,7 @@ export class ListTasksComponent implements OnInit {
     const action = updateTaskRequest({ updatedTask });
 
     this.store.dispatch(action);
+    this.taskSocketService.dispatch('taskUpdated', task);
   }
 
   private initTasksState() {

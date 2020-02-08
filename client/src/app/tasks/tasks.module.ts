@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
+import { SocketIoModule } from 'ngx-socket-io';
 
 import { AddTasksComponent } from './add-tasks/add-tasks.component';
 import { ListTasksComponent } from './list-tasks/list-tasks.component';
@@ -32,7 +33,8 @@ import * as fromReducers from './reducers';
     StoreModule.forFeature('tasks-module', fromReducers.reducers, {
       metaReducers: fromReducers.metaReducers
     }),
-    EffectsModule.forFeature(EFFECTS)
+    EffectsModule.forFeature(EFFECTS),
+    SocketIoModule
   ],
   exports: [
     TasksComponent

@@ -9,6 +9,7 @@ import { Task } from 'src/app/tasks/shared/models/task.model';
 import { TasksService } from 'src/app/tasks/shared/services/tasks-http.service';
 import { TasksState } from '../states/tasks.state';
 import { updateTaskRequest, addTaskRequest } from '../actions';
+import { TaskSocketService } from '../shared/services/task-socket/task-socket.service';
 
 @Component({
   selector: 'app-add-tasks',
@@ -25,7 +26,8 @@ export class AddTasksComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private tasksService: TasksService,
-    private store: Store<TasksState>
+    private store: Store<TasksState>,
+    private taskSocketService: TaskSocketService
   ) { }
 
   ngOnInit() {
@@ -59,6 +61,7 @@ export class AddTasksComponent implements OnInit {
 
     const action = addTaskRequest({ task });
     this.store.dispatch(action);
+    this.taskSocketService.dispatch('taskCreated', task);
     this.resetForm();
   }
 
@@ -73,6 +76,7 @@ export class AddTasksComponent implements OnInit {
     };
     const action = updateTaskRequest({ updatedTask });
     this.store.dispatch(action);
+    this.taskSocketService.dispatch('taskUpdated', task);
     this.isEditMode = false;
     this.resetForm();
   }
