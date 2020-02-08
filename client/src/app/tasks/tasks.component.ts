@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, last, first, take, takeLast, skip, elementAt } from 'rxjs/operators';
 
 import { TaskSocketService } from './shared/services/task-socket/task-socket.service';
 import { TasksModuleState } from './states';
@@ -35,12 +35,13 @@ export class TasksComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.taskCreated$
       .pipe(
-        takeUntil(this.destroySubject$)
+        takeUntil(this.destroySubject$),
       )
       .subscribe((payload) => {
-
-        const action = addTask({ task: payload });
-        this.store.dispatch(action);
+        if (payload.createdAt) {
+          const action = addTask({ task: payload });
+          this.store.dispatch(action);
+        }
       });
 
     this.taskUpdated$

@@ -64,7 +64,7 @@ export class ListTasksComponent implements OnInit {
     const action = updateTaskRequest({ updatedTask });
 
     this.store.dispatch(action);
-    this.taskSocketService.dispatch('taskUpdated', task);
+    this.taskSocketService.dispatch('taskUpdated', updatedTask.changes);
   }
 
   private initTasksState() {
